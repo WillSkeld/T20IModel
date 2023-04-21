@@ -1,0 +1,27 @@
+library(posterior)
+extract(hfitex20t)
+draws <- as.matrix(hfitex20t)[,53:72]
+draws<- as.data.frame(draws)
+raw <- matrix(ncol=10000,nrow=ncol(draws))
+rank<- matrix(ncol=10000,nrow=ncol(draws))
+nrow(raw)
+col
+y
+for(y in 1:ncol(draws)){
+  col <- draws %>% select(y)
+  raw[y,]<- col[sample(1:1000, 10000, replace = T),]
+  }
+}
+raw<-as.data.frame(raw)
+rank<- as.data.frame(rank)
+for(z in  1:ncol(raw)){
+  rank[,z] <- rank(as.numeric(-raw[,z]))
+}
+as.numeric(rank)
+summary <- matrix(ncol = 3, nrow = 20)
+for(i in 1:20){
+summary[i,1] <- median(unlist(as.list(rank[i,])))
+summary[i,2] <- quantile(unlist(as.list(rank[i,])), 0.05)
+summary[i,3] <- quantile(unlist(as.list(rank[i,])),.95)
+
+}
