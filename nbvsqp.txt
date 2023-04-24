@@ -1,0 +1,31 @@
+library(performance)
+library(MASS)
+library(ggplot2)
+library(gridExtra)
+library(AER)
+library(statmod)
+library(performance)
+library(rcompanion)
+test_model_qp <- glm(runs_per_over ~ offset(log(faced)) + over + striker + era + bowling_team + innings + wickets_lost_yet, family = quasipoisson, 
+                     data = xcsDataLite01)
+
+test_model_nb <- glm.nb(runs_per_over ~ offset(log(faced)) + over + striker + era + bowling_team + innings + wickets_lost_yet, data = xcsDataLite01)
+check_odispersion(test_model_qp)
+check_overdispersion(test_model_nb)
+plot(test_model_qp,2)
+plot(test_model_nb,2)
+compare_performance(test_model_nb,test_model_qp, rank = TRUE)
+summary(test_model_nb)
+summary(test_model_qp)
+
+anova(test_model_nb)
+plot(density(rstandard(test_model_nb, type='deviance')))
+lines(density(rstandard(test_model_qp, type='deviance')), col='red')
+
+par(mfrow=c(1,2))
+qqnorm(qresid(test_model_nb), qqline(qresid(test_model_nb)))
+qqnorm(qresid(test_model_qp), qqline(qresid(test_model_qp)))
+
+par(mfrow=c(1,2))
+plot(cooks.distance(test_model_nb), type='h')
+plot(cooks.distance(test_model_qp), type='h')
